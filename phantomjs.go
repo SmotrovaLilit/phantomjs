@@ -1306,9 +1306,12 @@ function handleWebpageSetCustomHeaders(request, response) {
 
 function handleWebpageCreate(request, response) {
 	var ref = createRef(webpage.create());
-	response.statusCode = 200;
-	response.write(JSON.stringify({ref: ref}));
-	response.closeGracefully();
+    
+	page.onLoadFinished = function(status) {
+        response.statusCode = 200;
+        response.write(JSON.stringify({ref: ref}));
+        response.closeGracefully();
+    };
 }
 
 function handleWebpageOpen(request, response) {
