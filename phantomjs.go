@@ -1305,11 +1305,12 @@ function handleWebpageSetCustomHeaders(request, response) {
 }
 
 function handleWebpageCreate(request, response) {
-	var ref = createRef(webpage.create());
-    
+	var pageRef = createRef(webpage.create());
+    var page = ref(pageRef);
+
 	page.onLoadFinished = function(status) {
         response.statusCode = 200;
-        response.write(JSON.stringify({ref: ref}));
+        response.write(JSON.stringify({ref: pageRef}));
         response.closeGracefully();
     };
 }
