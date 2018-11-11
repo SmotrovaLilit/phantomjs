@@ -1239,7 +1239,7 @@ server.listen(system.env["PORT"], function(request, response) {
 		}
 	} catch(e) {
 		response.statusCode = 500;
-		response.write(JSON.stringify({url: request.url, error: e.message}));
+		response.write(JSON.stringify({url: request.url, error: e.message, e: JSON.stringify(e)}));
 		response.closeGracefully();
 	}
 });
