@@ -109,12 +109,11 @@ func (p *Process) Open() error {
 // Close stops the process.
 func (p *Process) Close() (err error) {
 	// Kill process.
-	if p.cmd != nil {
-		if e := p.cmd.Process.Kill(); e != nil && err == nil {
-			err = e
-		}
-		p.cmd.Wait()
+	resp, err := http.Get(p.URL() + "/exit")
+	if err != nil {
+		return err
 	}
+	resp.Body.Close()
 
 	// Remove shim file.
 	if p.path != "" {
@@ -1163,6 +1162,7 @@ server.listen(system.env["PORT"], function(request, response) {
 	try {
 		switch (request.url) {
 			case '/ping': return handlePing(request, response);
+			case '/exit': return handleExit(request, response);
 			case '/webpage/CanGoBack': return handleWebpageCanGoBack(request, response);
 			case '/webpage/CanGoForward': return handleWebpageCanGoForward(request, response);
 			case '/webpage/ClipRect': return handleWebpageClipRect(request, response);
@@ -1248,6 +1248,13 @@ function handlePing(request, response) {
 	response.statusCode = 200;
 	response.write('ok');
 	response.closeGracefully();
+}
+
+function handleExit(request, response) {
+    response.statusCode = 200;
+    response.write('ok');
+    response.closeGracefully();
+    phantom.exit(0);
 }
 
 function handleWebpageCanGoBack(request, response) {
