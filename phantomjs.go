@@ -1148,7 +1148,7 @@ type webPageSettingsJSON struct {
 }
 
 // shim is the included javascript used to communicate with PhantomJS.
-const shim = ` 
+const shim = `
 var system = require("system")
 var webpage = require('webpage');
 var webserver = require('webserver');
@@ -1239,7 +1239,7 @@ server.listen(system.env["PORT"], function(request, response) {
 		}
 	} catch(e) {
 		response.statusCode = 500;
-		response.write(JSON.stringify({url: request.url, error: e.message, stack: e.stack}));
+		response.write(JSON.stringify({url: request.url, error: e.message}));
 		response.closeGracefully();
 	}
 });
@@ -1305,14 +1305,11 @@ function handleWebpageSetCustomHeaders(request, response) {
 }
 
 function handleWebpageCreate(request, response) {
-	var pageRef = createRef(webpage.create());
-    var page = ref(pageRef);
+    var ref = createRef(webpage.create());
 
-	page.onLoadFinished = function(status) {
-        response.statusCode = 200;
-        response.write(JSON.stringify({ref: pageRef}));
-        response.closeGracefully();
-    };
+    response.statusCode = 200;
+    response.write(JSON.stringify({ref: ref}));
+    response.closeGracefully();
 }
 
 function handleWebpageOpen(request, response) {
